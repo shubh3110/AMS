@@ -19,7 +19,7 @@
         <nav class="navbar navbar-default navbar-fixed-top" style="background: #ffffff; -webkit-box-shadow: rgba(110,110,110,.5) 3px 3px 10px; height: 100px;">
             <div class="row">
                 <div class="col-sm-12">
-                    <h1 style="color: #d2d2d2; margin-top: 30px; margin-left: 70px;"><span class="glyphicon glyphicon-flag" style="color: #76FF03; font-size: 40px;"></span> Register As Admin</h1>
+                    <h1 style="color: #d2d2d2; margin-top: 30px; margin-left: 70px;"><span class="glyphicon glyphicon-flag" style="color: #76FF03; font-size: 40px;"></span>Add or Remove Admin</h1>
                 </div>
             </div>
         </nav>
@@ -28,7 +28,12 @@
     
     <!--body part-->
     <div class="row">
-        <div class="col-sm-12" style="margin-bottom: 5px; background-color: #BCAAA4;">
+        <div class="col-sm-12">
+            <a href="adm_acc.php" style="text-decoration: none;"><h3 style="color: #000000; margin: 30px;"><span class="glyphicon glyphicon-backward"></span> Go back</h3></a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12" style="margin-bottom: 5px;">
             <div class="aa center-block" style="width: 600px; height: 600px; background-color: rgba(0,0,0,0.2);
                 margin-top: 30px;
                 margin-bottom: 30px;
@@ -58,32 +63,6 @@
                         </div>
                     </div>    
                     <div class="form-group">
-                        <label for="branch"><span class="glyphicon glyphicon-book"></span> Branch-name</label>
-                        <input list="branch" class="form-control" name="branch_id" placeholder="Enter Branch name">
-                        <datalist id="branch">
-                            <option value="Civil">
-                            <option value="Computer Science">
-                            <option value="Electrical">
-                            <option value="Mechanical">
-                            <option value="Metallurgy">
-                            <option value="Production">
-                        </datalist>
-                    </div>
-                    <div class="form-group">
-                        <label for="username"><span class="glyphicon glyphicon-book"></span> Semester</label>
-                        <input list="semester" class="form-control" name="sem_id" placeholder="Enter Semester No">
-                        <datalist id="semester">
-                            <option value="I">
-                            <option value="II">
-                            <option value="III">
-                            <option value="IV">
-                            <option value="V">
-                            <option value="VI">
-                            <option value="VII">
-                            <option value="VIII">
-                        </datalist>
-                    </div>
-                    <div class="form-group">
                         <label for="email-id"><span class="glyphicon glyphicon-envelope"></span> Email-Id</label>
                         <input type="text" class="form-control" name="email_id" placeholder="Enter email-id">
                     </div>
@@ -95,7 +74,14 @@
                         <label for="passsword"><span class="glyphicon glyphicon-eye-open"></span> Password</label>
                         <input type="password" class="form-control" name="pwd" placeholder="Enter password">
                     </div>
-                    <button type="submit" name="Admin_submit" class="btn btn-success btn-block"><span class="glyphicon glyphicon-off"></span> Sign Up</button>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <button type="submit" name="Admin_add_submit" class="btn btn-success btn-block pull-right"><span class="glyphicon glyphicon-off"></span>Add</button>
+                        </div>
+                        <div class="col-sm-6">
+                            <button type="submit" name="Admin_remove_submit" class="btn btn-success btn-block"><span class="glyphicon glyphicon-off"></span>Remove</button>
+                        </div> 
+                    </div>
                 </form>
             </div>
         </div>

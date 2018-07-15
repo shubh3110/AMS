@@ -2,6 +2,15 @@
     include_once 'includes/dbh.inc.php';
     session_start();
     if(!isset($_SESSION['uid'])) header("Location: ../ams/index.php");
+
+    $var1=$_SESSION['uid'];
+    $var3=$_SESSION['roleid'];
+    if($var3=='Admin') $sql="SELECT *FROM admin WHERE username='$var1'";
+    else if($var3=='Faculty') $sql="SELECT *FROM faculty WHERE username='$var1'";
+    else if($var3=='Student') $sql="SELECT *FROM users WHERE regid='$var1'";
+    $result=mysqli_query($conn,$sql);
+    $row=mysqli_fetch_assoc($result);
+    $first_name=$row['firstname'];
 ?>
 
 <!--header-part-->

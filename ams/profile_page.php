@@ -10,50 +10,16 @@
     $dbName="ams";
     $conn=mysqli_connect($dbServername,$dbUsername,$dbPassword,$dbName);
     $var1=$_SESSION['uid'];
-    $var2=$_SESSION['sem_id'];
+    //$var2=$_SESSION['sem_id'];
     $var3=$_SESSION['roleid'];
 
-    if($var3=='Admin'||$var3=='Faculty')
-    {
-        $sql="SELECT *FROM faculty WHERE username='$var1'";
-    }
-    else if($var3=='Student')
-    {
-        $sql="SELECT *FROM users WHERE regid='$var1' OR username='$var1'";
-    }
+    if($var3=='Admin') $sql="SELECT *FROM admin WHERE username='$var1'";
+    else if($var3=='Faculty') $sql="SELECT *FROM faculty WHERE username='$var1'";
+    else if($var3=='Student') $sql="SELECT *FROM users WHERE regid='$var1' OR username='$var1'";
 
     $result=mysqli_query($conn,$sql);
     $row=mysqli_fetch_assoc($result);
-
-    if(isset($_POST['submit']))
-    {
-        $target_dir='/opt/lampp/htdocs/project/ams/profilephotos/';
-        $target_file=$target_dir.basename($_FILES['profilePicture']['name']);
-        $image=$_FILES['profilePicture']['name'];
-        if($var3=='Admin'|| $var3=='Faculty')
-        {
-            $sql="UPDATE faculty SET profileimg='$image' WHERE username='$var1'";
-            
-        }
-
-        else if($var3=='Student')
-        {
-            $sql="UPDATE users SET profileimg='$image' WHERE regid='$var1' OR username='$var1'";
-        }
-
-        mysqli_query($conn,$sql);
-
-        if(copy($_FILES['profilePicture']['tmp_name'], $target_file))
-        {
-            $msg="Image uploaded successfully";
-            echo $msg;
-        }
-        else
-        {
-            $msg="There was some error in uploading image";
-            echo $msg;
-        }
-    }
+    
 ?>
 
 <!DOCTYPE html>
@@ -130,7 +96,15 @@
                     </thead>
                     <tbody> 
                         <?php
-                            if($var3=='Admin'||$var3=='Faculty')
+                            if($var3=='Admin')
+                            {
+                                $x='Name:';
+                                $y='Department:';
+                                $z='Email-Id:';
+                                echo "<tr><td style='text-align: center'>".$x."</td><td style='text-align: center'>" . $row["firstname"]. " " . $row["lastname"]. "</td></tr>";
+                                echo "<tr><td style='text-align: center'>".$z."</td><td style='text-align: center'>" . $row["emailid"]. "</td></tr>";
+                            }
+                            else if($var3=='Faculty')
                             {
                                 $x='Name:';
                                 $y='Department:';
@@ -160,26 +134,30 @@
                     <div class="col-sm-12">
                         <div class="container-fluid">
                             <?php
-                                if($var3=='Admin'||$var3=='Faculty')
+                                if($var3=='Admin')
                                 {
-                                    $sql="SELECT *FROM faculty WHERE username='$var1'";
-                                }
-                                else if($var3=='Student')
+                                    $sql="SELECT *FROM admin WHERE username='$var1'";
+                                    $result=mysqli_query($conn,$sql);
+                                    $row=mysqli_fetch_assoc($result);
+                                    if(!$row['profileimage']) echo "<img src='profilephotos/default-avatar.png' class='img-responsive img-circle center-block' style='height: 300px; width: 300px;' alt='profile' >";
+                                    else echo "<img src='profilephotos/".$row['profileimage']."' class='img-responsive img-circle center-block' style='height: 300px; width: 300px;' alt='profile'>";
+                                } 
+                                else if($var3=='Faculty') $sql="SELECT *FROM faculty WHERE username='$var1'";
+                                else if($var3=='Student') $sql="SELECT *FROM users WHERE regid='$var1' OR username='$var1'";
+
+                                if($var3=='Faculty'||$var3=='Student')
                                 {
-                                    $sql="SELECT *FROM users WHERE regid='$var1' OR username='$var1'";
+                                    $result=mysqli_query($conn,$sql);
+                                    $row=mysqli_fetch_assoc($result);
+                                    if(!$row['profileimg']) echo "<img src='profilephotos/default-avatar.png' class='img-responsive img-circle center-block' style='height: 300px; width: 300px;' alt='profile' >";
+                                    else echo "<img src='profilephotos/".$row['profileimg']."' class='img-responsive img-circle center-block' style='height: 300px; width: 300px;' alt='profile'>";
                                 }
-
-                                $result=mysqli_query($conn,$sql);
-                                $row=mysqli_fetch_assoc($result);
-
-                                if(!$row['profileimg']) echo "<img src='profilephotos/default-avatar.png' class='img-responsive img-circle center-block' style='height: 300px; width: 300px;' alt='profile' >";
-                                else echo "<img src='profilephotos/".$row['profileimg']."' class='img-responsive img-circle center-block' style='height: 300px; width: 300px;' alt='profile'>";
                             ?>
                         </div>
                     </div>
                 </div>
                 <div class="row">
-                    <form action="profile_page.php" method="POST" enctype="multipart/form-data">
+                    <form action="profile_pic_upload.php" method="POST" enctype="multipart/form-data">
                         <div class="col-sm-6" style="padding-left: 160px;">
                             <input type="file" name="profilePicture">
                         </div>

@@ -10,80 +10,8 @@
     $dbName="ams";
     $conn=mysqli_connect($dbServername,$dbUsername,$dbPassword,$dbName);
     $var1=$_SESSION['uid'];
-    $var2=$_SESSION['sem_id'];
+    //$var2=$_SESSION['sem_id'];
     $var3=$_SESSION['roleid'];
-
-    
-    if(isset($_POST['update1']))
-    {
-        $user_id=mysqli_real_escape_string($conn,$_POST['user_id']);
-        $old_pwd=mysqli_real_escape_string($conn,$_POST['old_pwd']);
-        $new_pwd=mysqli_real_escape_string($conn,$_POST['new_pwd']);
-        $old_pwd=md5($old_pwd);
-        $new_pwd=md5($new_pwd);
-
-        if($var3=='Admin'||$var3=='Faculty')
-        {
-            $sql="SELECT *FROM faculty WHERE username='$var1'";
-            $result=mysqli_query($conn,$sql);
-            $row=mysqli_fetch_assoc($result);
-            if(!strcmp($old_pwd,$row['fac_pwd']))
-            {
-                $sql1="UPDATE faculty SET fac_pwd='$new_pwd' WHERE username='$var1'";
-                mysqli_query($conn,$sql1);
-            }
-            $sql2="UPDATE faculty SET username='$user_id' WHERE username='$var1'";
-            mysqli_query($conn,$sql2);
-        }
-
-        else if($var3=='Student')
-        {
-            $sql="SELECT *FROM users WHERE regid='$var1' OR username='$var1'";
-            $result=mysqli_query($conn,$sql);
-            $row=mysqli_fetch_assoc($result);
-            if(!strcmp($old_pwd,$row['user_pwd']))
-            {
-                $sql1="UPDATE users SET user_pwd='$new_pwd' WHERE regid='$var1' OR username='$var1'";
-                mysqli_query($conn,$sql1);
-            }
-            $sql2="UPDATE users SET username='$user_id' WHERE regid='$var1' OR username='$var1'";
-            mysqli_query($conn,$sql2);
-        }
-
-        $_SESSION['uid']=$user_id;
-        $var1=$_SESSION['uid'];
-
-
-    }
-
-    if(isset($_POST['update2']))
-    {
-        $target_dir='/opt/lampp/htdocs/project/ams/profilephotos/';
-        $target_file=$target_dir.basename($_FILES['profilePicture']['name']);
-        $image=$_FILES['profilePicture']['name'];
-        if($var3=='Admin'|| $var3=='Faculty')
-        {
-            $sql="UPDATE faculty SET profileimg='$image' WHERE username='$var1'";
-        }
-
-        else if($var3=='Student')
-        {
-            $sql="UPDATE users SET profileimg='$image' WHERE regid='$var1' OR username='$var1'";
-        }
-
-        mysqli_query($conn,$sql);
-
-        if(copy($_FILES['profilePicture']['tmp_name'], $target_file))
-        {
-            $msg="Image uploaded successfully";
-            echo $msg;
-        }
-        else
-        {
-            $msg="There was some error in uploading image";
-            echo $msg;
-        }
-    }
 ?>
 
 <!DOCTYPE html>
@@ -154,7 +82,7 @@
             <div class="col-sm-6" style="padding-top: 50px;">  
                 <div class="row">
                     <div class="col-sm-12">
-                        <form role="form" action="update_acc.php" method="POST">
+                        <form role="form" action="acc_update.php" method="POST">
                             <div class="form-group">
                                 <label for="username"><span class="glyphicon glyphicon-user"></span> Change username</label>
                                 <input typ="text" class="form-control" name="user_id" placeholder="Enter username">
@@ -177,7 +105,11 @@
                     <div class="col-sm-12">
                         <div class="container-fluid">
                             <?php
-                                if($var3=='Admin'||$var3=='Faculty')
+                                if($var3=='Admin')
+                                {
+                                    $sql="SELECT *FROM admin WHERE username='$var1'";
+                                }
+                                else if($var3=='Faculty')
                                 {
                                     $sql="SELECT *FROM faculty WHERE username='$var1'";
                                 }
@@ -190,14 +122,22 @@
                                 $result=mysqli_query($conn,$sql);
                                 $row=mysqli_fetch_assoc($result);
 
-                                if(!$row['profileimg']) echo "<img src='profilephotos/default-avatar.png' class='img-responsive img-circle center-block' style='height: 300px; width: 300px;' alt='profile' >";
-                                else echo "<img src='profilephotos/".$row['profileimg']."' class='img-responsive img-circle center-block' style='height: 300px; width: 300px;' alt='profile'>";
+                                if($var3=='Admin')
+                                {
+                                    if(!$row['profileimage']) echo "<img src='profilephotos/default-avatar.png' class='img-responsive img-circle center-block' style='height: 300px; width: 300px;' alt='profile' >";
+                                    else echo "<img src='profilephotos/".$row['profileimage']."' class='img-responsive img-circle center-block' style='height: 300px; width: 300px;' alt='profile'>";
+                                }
+                                else
+                                {
+                                    if(!$row['profileimg']) echo "<img src='profilephotos/default-avatar.png' class='img-responsive img-circle center-block' style='height: 300px; width: 300px;' alt='profile' >";
+                                    else echo "<img src='profilephotos/".$row['profileimg']."' class='img-responsive img-circle center-block' style='height: 300px; width: 300px;' alt='profile'>";
+                                }
                             ?>
                         </div>
                     </div>
                 </div>
                 <div class="row">
-                    <form action="update_acc.php" method="POST" enctype="multipart/form-data">
+                    <form action="acc_update.php" method="POST" enctype="multipart/form-data">
                         <div class="col-sm-6" style="padding-left: 160px;">
                             <input type="file" name="profilePicture">
                         </div>

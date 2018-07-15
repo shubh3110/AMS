@@ -115,7 +115,7 @@
                         <label for="passsword"><span class="glyphicon glyphicon-eye-open"></span> Password</label>
                         <input type="password" class="form-control" name="pwd" placeholder="Enter password">
                     </div>
-                    <button type="submit" name="User_submit" class="btn btn-success btn-block"><span class="glyphicon glyphicon-off"></span> Register</button>
+                    <button type="submit" name="Student_submit" class="btn btn-success btn-block"><span class="glyphicon glyphicon-off"></span> Register</button>
                 </form>
             </div>
         </div>

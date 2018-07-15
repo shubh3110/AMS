@@ -9,14 +9,29 @@
     $dbName="ams";
     $conn=mysqli_connect($dbServername,$dbUsername,$dbPassword,$dbName);
     $var1=$_SESSION['uid'];
-    $var2=$_SESSION['sem_id'];
     $var3=$_SESSION['roleid'];
 
-    if($var3=='Faculty')
+    if(isset($_POST['stud_list']))
     {
-        $sql="SELECT *FROM admins WHERE username='$var1'";
+        $branch_id=mysqli_real_escape_string($conn,$_POST['branch_id']);
+        $sem_id=mysqli_real_escape_string($conn,$_POST['sem_id']);
+        $course_id=mysqli_real_escape_string($conn,$_POST['course_id']);
+        $date=mysqli_real_escape_string($conn,$_POST['date']);
+
+        if(empty($branch_id)||empty($sem_id)||empty($course_id)||empty($date))
+        {
+            header("Location: ../ams/select_course.php?fill_up_the_entries");
+            exit();
+        }
+
+        $sql="SELECT *FROM subjects WHERE course_id='$course_id'";
         $result=mysqli_query($conn,$sql);
-        $row1=mysqli_fetch_assoc($result);
+        $row=mysqli_fetch_assoc($result);
+        if($row['semid']!=$sem_id)
+        {
+            header("Location: ../ams/select_course.php?sem_id_does_not_match_with_semester_of_course_id ");
+            exit();
+        } 
     }
 
 ?>
@@ -61,38 +76,35 @@
     <div class="container-fluid" style="margin-bottom: 30px;">
         <div class="row">
             <div class="col-sm-12">
-                <?php
-                    if($var3=='Faculty')
-                    {
-                        echo "<a href='fac_acc.php' style='text-decoration: none;'><h3 style='color: #2d2d2d; margin: 30px;'><span class='glyphicon glyphicon-backward'></span> Go back</h3></a>";
-                    }
-                ?>
+                <a href='fac_acc.php' style='text-decoration: none;'><h3 style='color: #2d2d2d; margin: 30px;'><span class='glyphicon glyphicon-backward'></span> Go back</h3></a>
             </div>
         </div>
         <div class="row">    
             <div class="col-sm-12">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th style="width: 300px; text-align: center;">Registration Id</th>
-                            <th style="width: 300px; text-align: center;">Name</th>
-                            <th style="width: 300px; text-align: center;">Mark</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-
-                            $sql="SELECT regid,firstname,lastname FROM users WHERE semid='$var2'";
-                            $result=mysqli_query($conn,$sql);
-                            while($row=mysqli_fetch_assoc($result))
-                            {
-                                echo "<tr><td style='width: 300px; text-align: center'>" . $row["regid"]. "</td><td style='width: 300px; text-align: center;'>" . $row["firstname"]. " " . $row["lastname"]. "</td><td style='width: 300px; text-align: center;'><form role='form' method='POST'><input type='radio' name='optradio' onclick='update_attendance.php'></form></td></tr>";
-                            }
-                            //mysqli_close($conn);
-
-                        ?>
-                    </tbody>
-                </table>
+                <form role='form' action='update_attendance.php' method='POST'>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th style="width: 300px; text-align: center;">Registration Id</th>
+                                <th style="width: 300px; text-align: center;">Name</th>
+                                <th style="width: 300px; text-align: center;">Present</th>
+                                <th style="width: 300px; text-align: center;">Absent</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                                <?php
+                                    $sql="SELECT users.regid,users.firstname,users.lastname FROM users NATURAL JOIN subjects WHERE subjects.semid=users.semid AND subjects.branchid=users.branchid AND subjects.course_id='$course_id'";
+                                    $result=mysqli_query($conn,$sql);
+                                    while($row=mysqli_fetch_assoc($result))
+                                    {
+                                        echo "<tr><td style='width: 300px; text-align: center'>" . $row["regid"]. "</td><td style='width: 300px; text-align: center;'>" . $row["firstname"]. " " . $row["lastname"]. "</td><td style='width: 300px; text-align: center;'><label><input type='radio' name='present'>P</label></td>"."<td style='width: 300px; text-align: center;'><label><input type='radio' name='absent'>A</label></td>"."</tr>";
+                                    }
+                                ?>
+                            
+                        </tbody>
+                    </table>
+                    <button type='submit' name='mark' class='btn btn-success btn-block'>Mark All</button>
+                </form>
             </div>
         </div>
     </div>

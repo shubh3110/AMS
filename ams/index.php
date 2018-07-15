@@ -78,12 +78,9 @@
     			</div>
     			<div class="col-sm-4">
     				<div class="row grid-divider" style="margin-bottom: 2px;">
-    				    <div class="col-sm-7">
-    				        <button type="button" class = "btn btn-success pull-right" data-toggle="modal" data-target="#loginModal" style="margin-top: 20px;">Log In</button>
+    				    <div class="col-sm-12">
+    				        <button type="button" class = "btn btn-success pull-right" data-toggle="modal" data-target="#loginModal" style="margin-top: 20px; margin-right: 20px;">Log In</button>
     				    </div>
-                        <div class="col-sm-5">
-                            <button type="button" class = "btn btn-success pull-left" data-toggle="modal" data-target="#signupModal" style="margin-top: 20px; margin-left: 20px;">Faculty Sign Up</button>
-                        </div>
     				</div>
     			</div>
     		</div>
@@ -116,20 +113,6 @@
                             <input type="text" class="form-control" name="uid" placeholder="Enter Username">
                         </div>
                         <div class="form-group">
-                            <label for="semester"><span class="glyphicon glyphicon-book"></span> Semester</label>
-                            <input list="semester" class="form-control" name="sem_id" placeholder="Enter Semester No">
-                            <datalist id="semester">
-                                <option value="I">
-                                <option value="II">
-                                <option value="III">
-                                <option value="IV">
-                                <option value="V">
-                                <option value="VI">
-                                <option value="VII">
-                                <option value="VIII">
-                            </datalist>
-                        </div>
-                        <div class="form-group">
                             <label for="password"><span class="glyphicon glyphicon-eye-open"></span> Password</label>
                             <input type="password" class="form-control" name="pwd" placeholder="Enter password">
                         </div>
@@ -137,71 +120,6 @@
                             <label><input type="checkbox" value="" Unchecked>Remember me</label>
                         </div>
                         <button type="submit" name="submit" class="btn btn-info btn-block" style="background-color: #7E57C2;"><span class="glyphicon glyphicon-off"></span> Login</button>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-danger btn-default pull-left" data-dismiss="modal">Cancel</button>
-                </div>
-            </div>
-        </div>
-    </div> 
-
-    <!--faculty signup modal-->
-    <div class="modal fade" id="signupModal" role="dialog">
-        <div class="modal-dialog">
-    
-            <!-- Modal content-->
-            <div class="modal-content">
-                <div class="modal-header" style="padding:35px 50px;">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 style="color: #ffffff; font-size: 30px;"><span class="glyphicon glyphicon-registration-mark"></span> Sign Up</h4>
-                </div>
-                <div class="modal-body" style="padding:40px 50px;">
-                    <form role="form" action="includes/register.inc.php" method="POST">
-                        <div class="container-fluid">
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <label for="firstname"><span class="glyphicon glyphicon-user"></span> First name</label>
-                                        <input type="text" class="form-control" name="first" placeholder="First Name">
-                                    </div>
-                                </div>
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <label for="lastname"><span class="glyphicon glyphicon-user"></span> Last name</label>
-                                        <input type="text" class="form-control" name="last" placeholder="Last Name">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>  
-                        <div class="form-group">
-                            <label for="branch"><span class="glyphicon glyphicon-book"></span> Branch-name</label>
-                            <input list="branch" class="form-control" name="branch_id" placeholder="Enter Branch name">
-                            <datalist id="branch">
-                                <option value="Civil">
-                                <option value="Computer Science">
-                                <option value="Electrical">
-                                <option value="Mechanical">
-                                <option value="Metallurgy">
-                                <option value="Production">
-                            </datalist>
-                        </div> 
-                        <div class="form-group">
-                            <label for="email-id"><span class="glyphicon glyphicon-envelope"></span> Email-Id</label>
-                            <input type="text" class="form-control" name="email_id" placeholder="Enter email">
-                        </div>
-                        <div class="form-group">
-                            <label for="username"><span class="glyphicon glyphicon-user"></span> Username</label>
-                            <input type="text" class="form-control" name="uid" placeholder="Enter username">
-                        </div>
-                        <div class="form-group">
-                            <label for="passsword"><span class="glyphicon glyphicon-eye-open"></span> Password</label>
-                            <input type="password" class="form-control" name="pwd" placeholder="Enter password">
-                        </div>
-                        <div class="checkbox">
-                            <label><input type="checkbox" value="" Unchecked>Remember me</label>
-                        </div>
-                        <button type="submit" name="Faculty_submit" class="btn btn-success btn-block" style="background-color: #7E57C2;"><span class="glyphicon glyphicon-off"></span> Sign Up</button>
                     </form>
                 </div>
                 <div class="modal-footer">

@@ -9,16 +9,14 @@
 	{
 		$roleid=mysqli_real_escape_string($conn,$_POST['role_id']);
 		$uid=mysqli_real_escape_string($conn,$_POST['uid']);
-		$sem_id=mysqli_real_escape_string($conn,$_POST['sem_id']);
 		$pwd=mysqli_real_escape_string($conn,$_POST['pwd']);
-		$_SESSION['sem_id']=$sem_id;
 		$_SESSION['uid']=$uid;
 		$_SESSION['roleid']=$roleid;
 		//$email=mysqli_real_escape_string($conn,$_POST['email']);
 
 		//Error handlers
 		//check if inputs are empty
-		if(empty($roleid)||empty($uid)||empty($sem_id)||empty($pwd))
+		if(empty($roleid)||empty($uid)||empty($pwd))
 		{
 			header("Location: ../index.php?fill_up_the_entries");
 			exit();
@@ -27,37 +25,37 @@
 		{
 			if($roleid=="Admin")
 			{
-				$sql="SELECT *FROM faculty WHERE username='$uid'";
-				$result=mysqli_query($conn,$sql);
-				$resultCheck=mysqli_num_rows($result);
-				if($resultCheck<1)
-				{
-					header("Location: ../index.php?admin_not_present");
-					exit();
-				}
+				$check="SELECT *FROM admin WHERE username='$uid';";
+				$present=mysqli_query($conn,$result);
+				$cnt=mysqli_num_rows($present);
+				if(!$cnt) if($uid=='admin'&&$pwd=='admin_1234') header("Location: ../adm_acc.php?login=success");
 				else
 				{
-					$row=mysqli_fetch_assoc($result);
-					$pwd=md5($pwd);
-					if(!strcmp($row['fac_pwd'],$pwd))
+					$sql="SELECT *FROM admin WHERE username='$uid'";
+					$result=mysqli_query($conn,$sql);
+					$resultCheck=mysqli_num_rows($result);
+					if(!$resultCheck)
 					{
-						if($row['admin']) 
-						{	
+						header("Location: ../index.php?admin_not_present");
+						exit();
+					}
+					else
+					{
+						$row=mysqli_fetch_assoc($result);
+						$pwd=md5($pwd);
+						if(!strcmp($row['pwd'],$pwd))
+						{
 							header("Location: ../adm_acc.php?login=success");
 							exit();
 						}
 						else
 						{
-							header("Location: ../index.php?not_assigned_as_admin");
+							header("Location: ../index.php?username or password_wrong");
 							exit();
 						}
 					}
-					else
-					{
-						header("Location: ../index.php?password_wrong");
-						exit();
-					}
 				}
+				
 			}
 
 			else if($roleid=="Faculty")

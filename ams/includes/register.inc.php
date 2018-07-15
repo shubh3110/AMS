@@ -4,7 +4,231 @@
 	session_start();
 	
 	//Admin registration
-	if(isset($_POST['Admin_submit']))
+	if(isset($_POST['Admin_add_submit']))
+	{
+		$first=mysqli_real_escape_string($conn,$_POST['first']);
+		$last=mysqli_real_escape_string($conn,$_POST['last']);
+		$email_id=mysqli_real_escape_string($conn,$_POST['email_id']);
+		$uid=mysqli_real_escape_string($conn,$_POST['uid']);
+		$pwd=mysqli_real_escape_string($conn,$_POST['pwd']);
+
+		//Error handlers
+		//check for empty fields
+		if(empty($first)||empty($last)||empty($email_id)||empty($uid)||empty($pwd))
+		{
+			header("Location: ../adm_update.php?fill_up_the_entries");
+			exit();
+		}
+		else
+		{
+			//check if input characters are valid
+			if(!preg_match("/^[a-zA-Z]*$/",$first)||!preg_match("/^[a-zA-Z]*$/",$last))
+			{
+				header("Location: ../adm_update.php?invalid_firstname_and_lastname");
+				exit();
+			}
+			else
+			{
+				//check if email is valid
+				if(filter_var($email_id,FILTER_VAIDATE_EMAIL))
+				{
+					header("Location: ../adm_update.php?invalid_email_id");
+					exit();
+				}
+				else
+				{
+					$sql="SELECT *FROM admin WHERE username='$uid'";
+					$result=mysqli_query($conn,$sql);
+					$resultCheck=mysqli_num_rows($result);
+
+					if($resultCheck>0)
+					{
+						$row=mysqli_fetch_assoc($result);
+						$pwd=md5($pwd);
+						if($row['pwd']==$pwd)
+						{
+							header("Location: ../adm_update.php?Already_registered");
+							exit();
+						} 
+						/*else 
+						{
+							$sql="UPDATE faculty SET admin='1' WHERE username='$uid' AND fac_pwd='$pwd'";
+							mysqli_query($conn,$sql);
+							header("Location: ../reg_adm.php?registration=success");
+							exit();
+						}*/
+					}
+					else
+					{
+						//hashing the password
+						//$hashedPwd=password_hash($pwd,PASSWORD_DEFAULT);
+						//Insert the user into the database
+						$pwd=md5($pwd);
+						$sql="INSERT INTO admin (firstname,lastname,emailid,username,pwd,profileimage) VALUES ('$first','$last','$email_id','$uid','$pwd','NULL');";
+						mysqli_query($conn,$sql);
+						session_start();
+						/*$_SESSION['u_first']=$first;
+						$_SESSION['u_last']=$last;
+						$_SESSION['u_email']=$email;
+						$_SESSION['u_name']=$uid;
+
+						$userid=$_SESSION['u_email'];
+						$sql="INSERT INTO profileimg (userid,status) VALUES ('$userid',0)";
+						mysqli_query($conn, $sql);*/
+                        header("Location: ../adm_update.php?Admin Added successfully");
+						exit();
+					}
+				}
+			}
+		}
+	}
+
+	//Remove admin
+	if(isset($_POST['Admin_remove_submit']))
+	{
+		$first=mysqli_real_escape_string($conn,$_POST['first']);
+		$last=mysqli_real_escape_string($conn,$_POST['last']);
+		$email_id=mysqli_real_escape_string($conn,$_POST['email_id']);
+		$uid=mysqli_real_escape_string($conn,$_POST['uid']);
+		$pwd=mysqli_real_escape_string($conn,$_POST['pwd']);
+
+		//Error handlers
+		//check for empty fields
+		if(empty($first)||empty($last)||empty($email_id)||empty($uid)||empty($pwd))
+		{
+			header("Location: ../adm_update.php?fill_up_the_entries");
+			exit();
+		}
+		else
+		{
+			//check if input characters are valid
+			if(!preg_match("/^[a-zA-Z]*$/",$first)||!preg_match("/^[a-zA-Z]*$/",$last))
+			{
+				header("Location: ../adm_update.php?invalid_firstname_and_lastname");
+				exit();
+			}
+			else
+			{
+				//check if email is valid
+				if(filter_var($email_id,FILTER_VAIDATE_EMAIL))
+				{
+					header("Location: ../adm_update.php?invalid_email_id");
+					exit();
+				}
+				else
+				{
+					$sql="SELECT *FROM admin WHERE username='$uid'";
+					$result=mysqli_query($conn,$sql);
+					$resultCheck=mysqli_num_rows($result);
+
+					if(!$resultCheck)
+					{
+						header("Location: ../adm_update.php?Not_registered");
+						exit();
+						/*else 
+						{
+							$sql="UPDATE faculty SET admin='1' WHERE username='$uid' AND fac_pwd='$pwd'";
+							mysqli_query($conn,$sql);
+							header("Location: ../reg_adm.php?registration=success");
+							exit();
+						}*/
+					}
+					else
+					{
+						//hashing the password
+						//$hashedPwd=password_hash($pwd,PASSWORD_DEFAULT);
+						//Insert the user into the database
+						$pwd=md5($pwd);
+						$sql="DELETE FROM admin WHERE username='$uid' AND pwd='$pwd';";
+						mysqli_query($conn,$sql);
+						session_start();
+						/*$_SESSION['u_first']=$first;
+						$_SESSION['u_last']=$last;
+						$_SESSION['u_email']=$email;
+						$_SESSION['u_name']=$uid;
+
+						$userid=$_SESSION['u_email'];
+						$sql="INSERT INTO profileimg (userid,status) VALUES ('$userid',0)";
+						mysqli_query($conn, $sql);*/
+                        header("Location: ../adm_update.php?update=success");
+						exit();
+					}
+				}
+			}
+		}
+	}
+	
+	//Faculty registration
+	if(isset($_POST['Faculty_add_submit']))
+	{
+		$first=mysqli_real_escape_string($conn,$_POST['first']);
+		$last=mysqli_real_escape_string($conn,$_POST['last']);
+		$branch_id=mysqli_real_escape_string($conn,$_POST['branch_id']);
+		$email_id=mysqli_real_escape_string($conn,$_POST['email_id']);
+		$uid=mysqli_real_escape_string($conn,$_POST['uid']);
+		$pwd=mysqli_real_escape_string($conn,$_POST['pwd']);
+
+		//Error handlers
+		//check for empty fields
+		if(empty($first)||empty($last)||empty($branch_id)||empty($email_id)||empty($uid)||empty($pwd))
+		{
+			header("Location: ../index.php?fill_up_the_entries");
+			exit();
+		}
+		else
+		{
+			//check if input characters are valid
+			if(!preg_match("/^[a-zA-Z]*$/",$first)||!preg_match("/^[a-zA-Z]*$/",$last))
+			{
+				header("Location: ../index.php?invalid_firstname_and_lastname");
+				exit();
+			}
+			else
+			{
+				//check if email is valid
+				if(filter_var($email_id,FILTER_VAIDATE_EMAIL))
+				{
+					header("Location: ../fac_update.php?invalid_email_id");
+					exit();
+				}
+				else
+				{
+					$sql="SELECT *FROM faculty WHERE username='$uid'";
+					$result=mysqli_query($conn,$sql);
+					$resultCheck=mysqli_num_rows($result);
+
+					if($resultCheck>0)
+					{
+						header("Location: ../fac_update.php?Already_registered");
+						exit();
+					}
+					else
+					{
+						//hashing the password
+						//$hashedPwd=password_hash($pwd,PASSWORD_DEFAULT);
+						//Insert the user into the database
+						$pwd=md5($pwd);
+						$sql="INSERT INTO faculty (firstname,lastname,branchid,emailid,username,fac_pwd) VALUES ('$first','$last','$branch_id','$email_id','$uid','$pwd');";
+						mysqli_query($conn,$sql);
+						session_start();
+						/*$_SESSION['u_first']=$first;
+						$_SESSION['u_last']=$last;
+						$_SESSION['u_email']=$email;
+						$_SESSION['u_name']=$uid;
+
+						$userid=$_SESSION['u_email'];
+						$sql="INSERT INTO profileimg (userid,status) VALUES ('$userid',0)";
+						mysqli_query($conn, $sql);*/
+                        header("Location: ../fac_update.php?registration=success");
+						exit();
+					}
+				}
+			}
+		}
+	}
+
+	//remove Faculty
+	if(isset($_POST['Faculty_remove_submit']))
 	{
 		$first=mysqli_real_escape_string($conn,$_POST['first']);
 		$last=mysqli_real_escape_string($conn,$_POST['last']);
@@ -84,78 +308,9 @@
 			}
 		}
 	}
-	
-	//Faculty registration
-	if(isset($_POST['Faculty_submit']))
-	{
-		$first=mysqli_real_escape_string($conn,$_POST['first']);
-		$last=mysqli_real_escape_string($conn,$_POST['last']);
-		$branch_id=mysqli_real_escape_string($conn,$_POST['branch_id']);
-		$email_id=mysqli_real_escape_string($conn,$_POST['email_id']);
-		$uid=mysqli_real_escape_string($conn,$_POST['uid']);
-		$pwd=mysqli_real_escape_string($conn,$_POST['pwd']);
-
-		//Error handlers
-		//check for empty fields
-		if(empty($first)||empty($last)||empty($branch_id)||empty($email_id)||empty($uid)||empty($pwd))
-		{
-			header("Location: ../index.php?fill_up_the_entries");
-			exit();
-		}
-		else
-		{
-			//check if input characters are valid
-			if(!preg_match("/^[a-zA-Z]*$/",$first)||!preg_match("/^[a-zA-Z]*$/",$last))
-			{
-				header("Location: ../index.php?invalid_firstname_and_lastname");
-				exit();
-			}
-			else
-			{
-				//check if email is valid
-				if(filter_var($email_id,FILTER_VAIDATE_EMAIL))
-				{
-					header("Location: ../reg_adm.php?invalid_email_id");
-					exit();
-				}
-				else
-				{
-					$sql="SELECT *FROM faculty WHERE username='$uid'";
-					$result=mysqli_query($conn,$sql);
-					$resultCheck=mysqli_num_rows($result);
-
-					if($resultCheck>0)
-					{
-						header("Location: ../reg_adm.php?Already_registered");
-						exit();
-					}
-					else
-					{
-						//hashing the password
-						//$hashedPwd=password_hash($pwd,PASSWORD_DEFAULT);
-						//Insert the user into the database
-						$pwd=md5($pwd);
-						$sql="INSERT INTO faculty (firstname,lastname,branchid,emailid,username,fac_pwd) VALUES ('$first','$last','$branch_id','$email_id','$uid','$pwd');";
-						mysqli_query($conn,$sql);
-						session_start();
-						/*$_SESSION['u_first']=$first;
-						$_SESSION['u_last']=$last;
-						$_SESSION['u_email']=$email;
-						$_SESSION['u_name']=$uid;
-
-						$userid=$_SESSION['u_email'];
-						$sql="INSERT INTO profileimg (userid,status) VALUES ('$userid',0)";
-						mysqli_query($conn, $sql);*/
-                        header("Location: ../fac_acc.php?registration=success");
-						exit();
-					}
-				}
-			}
-		}
-	}
 
 	//Students registration
-	else if(isset($_POST['User_submit']))
+	else if(isset($_POST['Student_submit']))
 	{
 		$first=mysqli_real_escape_string($conn,$_POST['first']);
 		$last=mysqli_real_escape_string($conn,$_POST['last']);
