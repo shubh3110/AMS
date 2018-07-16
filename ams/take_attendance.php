@@ -32,6 +32,8 @@
             header("Location: ../ams/select_course.php?sem_id_does_not_match_with_semester_of_course_id ");
             exit();
         } 
+        $_SESSION['course_id']=$course_id;
+        $_SESSION['date']=$date;
     }
 
 ?>
@@ -82,27 +84,27 @@
         <div class="row">    
             <div class="col-sm-12">
                 <form role='form' action='update_attendance.php' method='POST'>
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th style="width: 300px; text-align: center;">Registration Id</th>
-                                <th style="width: 300px; text-align: center;">Name</th>
-                                <th style="width: 300px; text-align: center;">Present</th>
-                                <th style="width: 300px; text-align: center;">Absent</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                                <?php
-                                    $sql="SELECT users.regid,users.firstname,users.lastname FROM users NATURAL JOIN subjects WHERE subjects.semid=users.semid AND subjects.branchid=users.branchid AND subjects.course_id='$course_id'";
-                                    $result=mysqli_query($conn,$sql);
-                                    while($row=mysqli_fetch_assoc($result))
-                                    {
-                                        echo "<tr><td style='width: 300px; text-align: center'>" . $row["regid"]. "</td><td style='width: 300px; text-align: center;'>" . $row["firstname"]. " " . $row["lastname"]. "</td><td style='width: 300px; text-align: center;'><label><input type='radio' name='present'>P</label></td>"."<td style='width: 300px; text-align: center;'><label><input type='radio' name='absent'>A</label></td>"."</tr>";
-                                    }
-                                ?>
+                    <?php
+                        echo '<table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th style="width: 300px; text-align: center;">Registration Id</th>
+                                    <th style="width: 300px; text-align: center;">Name</th>
+                                    <th style="width: 300px; text-align: center;">Present</th>
+                                </tr>
+                            </thead>
+                            <tbody>';
+                                $course_id=$_SESSION['course_id'];
+                                $sql="SELECT users.regid,users.firstname,users.lastname FROM users NATURAL JOIN subjects WHERE subjects.semid=users.semid AND subjects.branchid=users.branchid AND course_id='$course_id';";
+                                $result=mysqli_query($conn,$sql);
+                                while($row=mysqli_fetch_assoc($result))
+                                {
+                                    echo "<tr><td style='width: 300px; text-align: center'>" . $row["regid"]. "</td><td style='width: 300px; text-align: center;'>" . $row["firstname"]. " " . $row["lastname"]. "</td><td style='width: 300px; text-align: center;'><input type='checkbox' name='attendance[]' value='".$row["regid"]."'></label></td></tr>";
+                                }
                             
-                        </tbody>
-                    </table>
+                        echo '</tbody>
+                    </table>';
+                    ?>
                     <button type='submit' name='mark' class='btn btn-success btn-block'>Mark All</button>
                 </form>
             </div>

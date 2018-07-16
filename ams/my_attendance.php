@@ -25,16 +25,16 @@
                             $sql="SELECT *FROM users WHERE regid='$var1'";
                             $result=mysqli_query($conn,$sql);
                             $row=mysqli_fetch_assoc($result);
-                            $var=$row['semid'];
-                            $sql="SELECT *FROM subjects WHERE semid='$var'";
-                            $result1=mysqli_query($conn,$sql);
-                            while($row1=mysqli_fetch_assoc($result1))
+                            $semid=$row['semid'];
+                            $sql="SELECT *FROM subjects WHERE semid='$semid'";
+                            $result=mysqli_query($conn,$sql);
+                            while($row=mysqli_fetch_assoc($result))
                             {
-                                $subname=$row1['subname'];
-                                $subid=$row1['course_id'];
-                                $sql="SELECT FROM attendance WHERE regid='$var1' AND course_id='$subid'";
-                                $result2=mysqli_query($conn,$sql);
-                                $cnt=mysqli_num_rows($result2);
+                                $subname=$row['subname'];
+                                $subid=$row['course_id'];
+                                $sql="SELECT *FROM attendance WHERE regid='$var1' AND course_id='$subid'";
+                                $result1=mysqli_query($conn,$sql);
+                                $cnt=mysqli_num_rows($result1);
                                 echo "<tr><td style='text-align: center'>" . $subname. "</td><td style='text-align: center'>" . $cnt;
                             }
                         ?>
